@@ -19,13 +19,14 @@ chmod +x /usr/local/bin/docker-compose
 
 # installing azure cli
 curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
-az login --service-principal -u <APP-ID> -p <PASSWORD> --tenant <TENANT-ID>
+az login 
+#--service-principal -u <APP-ID> -p <PASSWORD> --tenant <TENANT-ID>
 
 # add extention to az
 az extension add --name azure-iot
 
 # container registry login 
-az acr login --name <AZURE-CONTAINER-REGISTRY>
+az acr login --name tegfleettrackeracr
 
 # create iot device 
 az iot hub device-identity create -n tediothub -d tediotdevice --ee false
@@ -41,7 +42,7 @@ curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -
 apt-get install -y nodejs build-essential sshpass
 
 # install npm packages and run nodejs app to set environment variables
-npm install && node set_env.js <RESOURCE-GROUP> tedblobstorage tediothub tediotdevice tedcosmosaccount tedLinuxVM tediotedgedevice <AZURE-CONTAINER-REGISTRY>
+npm install && node set_env.js TEDSmartFactory tedblobstorages tediothubs tediotdevice tedcosmosaccounts tedLinuxVMs tediotedgedevice tegfleettrackeracr
 # npm install && node set_env.js $resource_group $storage_acc $iot_hub $iot_device_name $cosmos_acc $vm_name
 
 docker-compose up -d
