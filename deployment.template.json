@@ -9,10 +9,10 @@
                         "minDockerVersion": "v1.25",
                         "loggingOptions": "",
                         "registryCredentials": {
-                            "<ACR-username>": {
+                            "tegfleettrackeracr": {
                                 "username": "$CONTAINER_REGISTRY_USERNAME",
                                 "password": "$CONTAINER_REGISTRY_PASSWORD",
-                                "address": "<ACR-address>.azurecr.io"
+                                "address": "tegfleettrackeracr.azurecr.io"
                             }
                         }
                     }
