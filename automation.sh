@@ -50,10 +50,10 @@ docker-compose up -d
 # Host name of the Nvidia Device : <NVIDIA-HOST-NAME> (Format : root@<public-ip-address>)
 # Port on which SSH in enabled on Nvidia device : <SSH-PORT> (Default port : 22)
 # Nvidia device root user password : <NVIDIA-PASSWORD> 
-sshpass -p <NVIDIA-PASSWORD> ssh -o 'StrictHostKeyChecking no' <NVIDIA-HOST-NAME> -p <SSH-PORT> 'exit'
-sshpass -p <NVIDIA-PASSWORD> ssh -tt <NVIDIA-HOST-NAME> -p <SSH-PORT> 'stty raw -echo; rm /etc/iotedge/config.yaml' < <(cat)
-sshpass -p <NVIDIA-PASSWORD> scp -P <SSH-PORT> config.yaml <NVIDIA-HOST-NAME>:/etc/iotedge
-sshpass -p <NVIDIA-PASSWORD> ssh -tt <NVIDIA-HOST-NAME> -p <SSH-PORT> 'stty raw -echo; systemctl restart iotedge' < <(cat)
+sshpass -p nvidia ssh -o 'StrictHostKeyChecking no' root@2.tcp.ngrok.io -p 15145 'exit'
+sshpass -p nvidia ssh -tt root@2.tcp.ngrok.io -p 15145 'stty raw -echo; rm /etc/iotedge/config.yaml' < <(cat)
+sshpass -p nvidia scp -P 15145 config.yaml root@2.tcp.ngrok.io:/etc/iotedge
+sshpass -p nvidia ssh -tt root@2.tcp.ngrok.io -p 15145 'stty raw -echo; systemctl restart iotedge' < <(cat)
 
 # deploy iotedge
 az iot edge set-modules --device-id tediotedgedevice --hub-name tediothub --content ./deployment.json
