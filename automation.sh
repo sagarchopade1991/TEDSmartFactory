@@ -29,8 +29,8 @@ az extension add --name azure-iot
 az acr login --name tegfleettrackeracr
 
 # create iot device 
-az iot hub device-identity create -n tediothub -d tediotdevice --ee false
-az iot hub device-identity create -n tediothub -d tediotedgedevice --ee true
+az iot hub device-identity create -n tediothubs -d tediotdevice --ee false
+az iot hub device-identity create -n tediothubs -d tediotedgedevice --ee true
 
 # create .env and copy content from env.temp
 true > .env && cp env.temp .env
@@ -56,4 +56,4 @@ sshpass -p nvidia scp -P 15145 config.yaml root@2.tcp.ngrok.io:/etc/iotedge
 sshpass -p nvidia ssh -tt root@2.tcp.ngrok.io -p 15145 'stty raw -echo; systemctl restart iotedge' < <(cat)
 
 # deploy iotedge
-az iot edge set-modules --device-id tediotedgedevice --hub-name tediothub --content ./deployment.json
+az iot edge set-modules --device-id tediotedgedevice --hub-name tediothubs --content ./deployment.json
