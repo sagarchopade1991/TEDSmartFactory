@@ -42,7 +42,7 @@
                         "status": "running",
                         "restartPolicy": "always",
                         "settings": {
-                            "image": "<Vision-Inspection-Docker-Image>",
+                            "image": "tegfleettrackeracr.azurecr.io/tedvisioninspection:0.0.1-arm64v8",
                             "createOptions": "{\"ExposedPorts\":{\"8554/tcp\":{}},\"HostConfig\":{\"Runtime\":\"nvidia\",\"PortBindings\":{\"8554/tcp\":[{\"HostPort\":\"8554\"}]},\"Binds\":[\"/tmp:/tmp\"],\"NetworkMode\":\"host\",\"DeviceRequests\":[{\"Capabilities\":[[\"gpu\"]],\"Options\":{}}]},\"NetworkingConfig\":{\"EndpointsConfig\":{\"host\":{}}}}"
                         }
                     },
@@ -52,7 +52,7 @@
                         "status": "running",
                         "restartPolicy": "always",
                         "settings": {
-                            "image": "<Middleware-Docker-Image>",
+                            "image": "tegfleettrackeracr.azurecr.io/middleware:0.0.1-arm64v8",
                             "createOptions": "{\"NetworkingConfig\":{\"EndpointsConfig\":{\"host\":{}}},\"HostConfig\":{\"NetworkMode\":\"host\",\"Binds\":[\"/tmp:/app/blobImages/\"]}}"
                         },
                         "env": {
