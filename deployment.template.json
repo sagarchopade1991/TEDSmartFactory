@@ -1,0 +1,96 @@
+{
+    "modulesContent": {
+        "$edgeAgent": {
+            "properties.desired": {
+                "schemaVersion": "1.0",
+                "runtime": {
+                    "type": "docker",
+                    "settings": {
+                        "minDockerVersion": "v1.25",
+                        "loggingOptions": "",
+                        "registryCredentials": {
+                            "<ACR-username>": {
+                                "username": "$CONTAINER_REGISTRY_USERNAME",
+                                "password": "$CONTAINER_REGISTRY_PASSWORD",
+                                "address": "<ACR-address>.azurecr.io"
+                            }
+                        }
+                    }
+                },
+                "systemModules": {
+                    "edgeAgent": {
+                        "type": "docker",
+                        "settings": {
+                            "image": "mcr.microsoft.com/azureiotedge-agent:1.1",
+                            "createOptions": "{}"
+                        }
+                    },
+                    "edgeHub": {
+                        "type": "docker",
+                        "status": "running",
+                        "restartPolicy": "always",
+                        "settings": {
+                            "image": "mcr.microsoft.com/azureiotedge-hub:1.1",
+                            "createOptions":"{\"HostConfig\":{\"PortBindings\":{\"5671/tcp\":[{\"HostPort\":\"5671\"}],\"8883/tcp\":[{\"HostPort\":\"8883\"}],\"443/tcp\":[{\"HostPort\":\"443\"}]}}}"
+                        }
+                    }
+                },
+                "modules": {
+                    "VisionInspection": {
+                        "version": "1.0",
+                        "type": "docker",
+                        "status": "running",
+                        "restartPolicy": "always",
+                        "settings": {
+                            "image": "<Vision-Inspection-Docker-Image>",
+                            "createOptions": "{\"ExposedPorts\":{\"8554/tcp\":{}},\"HostConfig\":{\"Runtime\":\"nvidia\",\"PortBindings\":{\"8554/tcp\":[{\"HostPort\":\"8554\"}]},\"Binds\":[\"/tmp:/tmp\"],\"NetworkMode\":\"host\",\"DeviceRequests\":[{\"Capabilities\":[[\"gpu\"]],\"Options\":{}}]},\"NetworkingConfig\":{\"EndpointsConfig\":{\"host\":{}}}}"
+                        }
+                    },
+                    "Middleware": {
+                        "version": "1.0",
+                        "type": "docker",
+                        "status": "running",
+                        "restartPolicy": "always",
+                        "settings": {
+                            "image": "<Middleware-Docker-Image>",
+                            "createOptions": "{\"NetworkingConfig\":{\"EndpointsConfig\":{\"host\":{}}},\"HostConfig\":{\"NetworkMode\":\"host\",\"Binds\":[\"/tmp:/app/blobImages/\"]}}"
+                        },
+                        "env": {
+                            "deviceConnectionString": {
+                                "value": "$deviceConnectionString"
+                            },
+                            "azureStorageAccountName": {
+                                "value": "$azureStorageAccountName"
+                            },
+                            "azureStorageAccountAccessKey": {
+                                "value": "$azureStorageAccountAccessKey"
+                            },
+                            "eventHubsCompatibleEndpoint": {
+                                "value": "$eventHubsCompatibleEndpoint"
+                            },
+                            "eventHubsCompatiblePath": {
+                                "value": "$eventHubsCompatiblePath"
+                            },
+                            "iotHubSasKey": {
+                                "value": "$iotHubSasKey"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "$edgeHub": {
+            "properties.desired": {
+                "schemaVersion": "1.0",
+                "routes": {
+                    "MiddlewareToVisionInspectionStart": "FROM /messages/modules/Middleware/outputs/rawImageJson INTO BrokeredEndpoint(\"/modules/VisionInspection/inputs/startStreamingVisionInspection\")",
+                    "VisionInspectionToMiddleware": "FROM /messages/modules/VisionInspection/outputs/processDone INTO BrokeredEndpoint(\"/modules/Middleware/inputs/resultImage\")",
+                    "ResultJsonToIotHub": "FROM /messages/modules/Middleware/outputs/resultJson INTO $upstream"
+                },
+                "storeAndForwardConfiguration": {
+                    "timeToLiveSecs": 7200
+                }
+            }
+        }
+    }
+}
