@@ -1,0 +1,16 @@
+version: '3.9'
+services:
+  backend:
+    container_name: ted_backend
+    image: <ACR-BACKEND-IMAGE>
+    ports:
+      - '3000:3000'
+    env_file:
+      - .env
+  frontend:
+    container_name: ted_frontend
+    image: <ACR-FRONTEND-IMAGE>
+    env_file:
+      - .env
+    ports:
+      - '4200:4200'
