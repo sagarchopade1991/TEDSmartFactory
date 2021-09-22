@@ -1,0 +1,15 @@
+{
+  "name": "automation-script",
+  "version": "1.0.0",
+  "description": "",
+  "main": "set_env.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^10.0.0",
+    "replace-in-file": "^6.2.0"
+  }
+}
